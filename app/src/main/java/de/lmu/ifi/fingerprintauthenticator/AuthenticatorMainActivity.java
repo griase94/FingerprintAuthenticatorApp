@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -44,6 +46,8 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
     ListView mlistView;
     ListAdapter mlistAdapter;
 
+    FloatingActionButton mFloatingActionButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +57,14 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
         String[] services = {"Service 1", "Service 2"};
         mlistAdapter = new ListAdapter(this,services,new ListClickListener());
         mlistView.setAdapter(mlistAdapter);
+
+        mFloatingActionButton = findViewById(R.id.main_floating_action_button);
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(AuthenticatorMainActivity.this,"FAB clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.M)
