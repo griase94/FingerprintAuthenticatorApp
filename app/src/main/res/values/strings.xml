@@ -1,42 +1,15 @@
 <resources>
     <string name="app_name">Fingerprint Authenticator</string>
 
-
-
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_fingerprint">One-touch Sign In</string>
-    <string name="desc_fingerprint">Please place your fingertip on the scanner to verify your identity</string>
-    <string name="note">(Fingerprint sign in makes your app login much faster. Your device should have at least one fingerprint registered in device settings)</string>
-    <string name="title_activity_home">Fingerprint</string>
-    <string name="activity_home_desc">You have successfully logged in with fingerprint authentication</string>
-    <string name="activity_home_note">Close and re-open the app to see the fingerprint auth screen again</string>
-
-
-
-    <string name="action_settings">Settings</string>
     <string name="cancel">Cancel</string>
-    <string name="use_password">Use password</string>
-    <string name="sign_in">Sign in</string>
     <string name="ok">OK</string>
-    <string name="password">Password</string>
     <string name="fingerprint_description">Confirm fingerprint to continue</string>
     <string name="fingerprint_hint">Touch sensor</string>
-    <string name="password_description">Enter your store password to continue</string>
-    <string name="purchase">Purchase</string>
-    <string name="purchase_not_invalidated">Purchase not invalidated</string>
-    <string name="purchase_button_not_invalidated_description">
-        You can proceed to purchase with this button \n even if a new fingerprint is enrolled
-    </string>
     <string name="fingerprint_not_recognized">Fingerprint not recognized. Try again</string>
     <string name="fingerprint_success">Fingerprint recognized</string>
-    <string name="item_title">White Mesh Pluto Backpack</string>
-    <string name="item_price">$62.68</string>
-    <string name="item_description">Mesh backpack in white. Black textile trim throughout.</string>
-    <string name="purchase_done">Purchase successful</string>
-    <string name="new_fingerprint_enrolled_description">A new fingerprint was added to this device, so your password is required.</string>
     <string name="use_fingerprint_in_future">Use fingerprint in the future</string>
     <string name="use_fingerprint_to_authenticate_title">Use fingerprint to authenticate</string>
     <string name="use_fingerprint_to_authenticate_key" >use_fingerprint_to_authenticate_key</string>
-    <string name="description_bugdroid_icon">Android bugdroid image</string>
     <string name="description_fingerprint_icon">Fingerprint icon</string>
+    <string name="sign_in">Sign in</string>
 </resources>
