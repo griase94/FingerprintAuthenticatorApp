@@ -17,10 +17,13 @@ public class ListAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final String[] values;
 
-    public ListAdapter(Context context, String[] values) {
+    AuthenticatorMainActivity.ListClickListener mListClickListener;
+
+    public ListAdapter(Context context, String[] values, AuthenticatorMainActivity.ListClickListener listClickListener) {
         super(context, -1, values);
         this.context = context;
         this.values = values;
+        this.mListClickListener = listClickListener;
     }
 
     @Override
@@ -32,13 +35,10 @@ public class ListAdapter extends ArrayAdapter<String> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.rowIcon);
         textView.setText(values[position]);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("BLAAAA","blabla");
-            }
-        });
+        imageView.setOnClickListener(mListClickListener);
 
         return rowView;
     }
+
+
 }
