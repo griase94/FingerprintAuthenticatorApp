@@ -1,13 +1,13 @@
 package de.lmu.ifi.fingerprintauthenticator;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -27,7 +27,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
-public class AuthenticatorMainActivity extends Activity {
+public class AuthenticatorMainActivity extends AppCompatActivity {
     private static final String TAG = AuthenticatorMainActivity.class.getSimpleName();
 
     private static final String DIALOG_FRAGMENT_TAG = "myFragment";
