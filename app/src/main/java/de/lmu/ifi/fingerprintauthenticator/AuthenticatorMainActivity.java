@@ -1,18 +1,29 @@
 package de.lmu.ifi.fingerprintauthenticator;
 
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -23,6 +34,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -41,7 +54,7 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
     // Variable used for storing the key in the Android Keystore container
     private static final String KEY_NAME = "androidHive";
     private Cipher cipher;
-
+    private String android_id;
 
     ListView mlistView;
     ListAdapter mlistAdapter;
@@ -53,6 +66,9 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authenticator_main);
 
+        android_id  = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
         mlistView = (findViewById(R.id.main_listview));
         String[] services = {"Service 1", "Service 2"};
         mlistAdapter = new ListAdapter(this,services,new ListClickListener());
@@ -62,9 +78,65 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(AuthenticatorMainActivity.this,"FAB clicked", Toast.LENGTH_SHORT).show();
+                deviceRegistration();
             }
         });
+    }
+
+    public void deviceRegistration(){
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference deviceRegistrationRef = database.getReference("device_registration");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Title");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final String token = input.getText().toString();
+                deviceRegistrationRef.child(token).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        try{
+                            RegistrationInfo info = dataSnapshot.getValue(RegistrationInfo.class);
+                            Toast.makeText(AuthenticatorMainActivity.this,info.user_id + " - "+ info.service_name,Toast.LENGTH_LONG).show();
+                            final DatabaseReference usersRef = database.getReference("users");
+                            final DatabaseReference devicesRef = database.getReference("devices");
+
+                            Map<String,Object> userUpdateMap = new HashMap<>();
+                            userUpdateMap.put("device_id",android_id);
+                            usersRef.child(info.getUser_id()).updateChildren(userUpdateMap);
+
+                            devicesRef.child(android_id).child("services").child(info.service_name).setValue(ServiceStatus.REGISTRATION_APPROVAL_NEEDED);
+                            deviceRegistrationRef.child(token).removeValue();
+                        }catch (Exception e){
+                            Toast.makeText(AuthenticatorMainActivity.this,"Token not valid!",Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(AuthenticatorMainActivity.this,"ERROR FAB",Toast.LENGTH_LONG).show();
+                        databaseError.toException().printStackTrace();
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -149,6 +221,4 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }
