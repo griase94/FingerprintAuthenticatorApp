@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "424933262452",
+    "firebase_url": "https://fingerprintauthenticator-524fb.firebaseio.com",
+    "project_id": "fingerprintauthenticator-524fb",
+    "storage_bucket": "fingerprintauthenticator-524fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424933262452:android:20b87d04bbbf758e",
+        "android_client_info": {
+          "package_name": "de.lmu.ifi.fingerprintauthenticator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424933262452-07k14ohm7f3p04998jcr9tpaljuksgut.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.lmu.ifi.fingerprintauthenticator",
+            "certificate_hash": "99ad45d5f9a9e96626c038d0415503b640243ce0"
+          }
+        },
+        {
+          "client_id": "424933262452-nk6jicf9lbmvgkp4uuu4690rdmg0cj2a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvdqg_bfaOYUC5UwGTESZInn2_8Ja_Ah8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424933262452-nk6jicf9lbmvgkp4uuu4690rdmg0cj2a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
