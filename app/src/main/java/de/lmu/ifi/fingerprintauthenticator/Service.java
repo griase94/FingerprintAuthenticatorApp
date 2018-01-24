@@ -8,6 +8,9 @@ public class Service {
     String name;
     ServiceStatus status;
 
+    public Service() {
+    }
+
     public Service(String name, ServiceStatus status) {
         this.name = name;
         this.status = status;

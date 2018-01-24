@@ -143,6 +143,8 @@ public class FingerprintAuthenticationDialogFragment extends DialogFragment
         // successful.
         //mActivity.onAuthen(true /* withFingerprint */, mCryptoObject);
         Toast.makeText(mActivity,"Authenticated!",Toast.LENGTH_SHORT).show();
+        String serviceName = getArguments().getString("SERVICE_NAME");
+        mActivity.changeStatus(serviceName);
         dismiss();
     }
 

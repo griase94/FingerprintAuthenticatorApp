@@ -57,7 +57,7 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
     private String android_id;
 
     ListView mlistView;
-    ListAdapter mlistAdapter;
+    FingerprintListAdapter mlistAdapterFingerprint;
 
     FloatingActionButton mFloatingActionButton;
 
@@ -69,10 +69,12 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
         android_id  = Settings.Secure.getString(getContentResolver(),
                 Settings.Secure.ANDROID_ID);
 
+        Log.i(TAG,"Android ID: "+android_id);
+
         mlistView = (findViewById(R.id.main_listview));
-        String[] services = {"Service 1", "Service 2"};
-        mlistAdapter = new ListAdapter(this,services,new ListClickListener());
-        mlistView.setAdapter(mlistAdapter);
+
+        mlistAdapterFingerprint = new FingerprintListAdapter(this,android_id,this);
+        mlistView.setAdapter(mlistAdapterFingerprint);
 
         mFloatingActionButton = findViewById(R.id.main_floating_action_button);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -113,8 +115,8 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
                             Map<String,Object> userUpdateMap = new HashMap<>();
                             userUpdateMap.put("device_id",android_id);
                             usersRef.child(info.getUser_id()).updateChildren(userUpdateMap);
-
-                            devicesRef.child(android_id).child("services").child(info.service_name).setValue(ServiceStatus.REGISTRATION_APPROVAL_NEEDED);
+                            Service newService = new Service(info.service_name,ServiceStatus.REGISTRATION_APPROVAL_NEEDED);
+                            devicesRef.child(android_id).child("services").child(info.service_name).setValue(newService);
                             deviceRegistrationRef.child(token).removeValue();
                         }catch (Exception e){
                             Toast.makeText(AuthenticatorMainActivity.this,"Token not valid!",Toast.LENGTH_LONG).show();
@@ -198,27 +200,35 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
         }
     }
 
-    protected class ListClickListener implements View.OnClickListener {
+    protected void changeStatus(String serviceName){
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference devicesRef = database.getReference("devices");
 
-        @Override
-        public void onClick(View view) {
-            generateKey();
-            // Set up the crypto object for later. The object will be authenticated by use
-            // of the fingerprint.
-            Cipher mCipher = cipherInit();
+        Map<String,Object> userUpdateMap = new HashMap<>();
+        userUpdateMap.put("status",ServiceStatus.APPROVED);
+        devicesRef.child(android_id).child(serviceName).updateChildren(userUpdateMap);
+    }
 
-            if (mCipher != null) {
+    protected void showFingerprintDialog(String serviceName){
+        generateKey();
+        // Set up the crypto object for later. The object will be authenticated by use
+        // of the fingerprint.
+        Cipher mCipher = cipherInit();
 
-                // Show the fingerprint dialog. The user has the option to use the fingerprint with
-                // crypto, or you can fall back to using a server-side verified password.
-                FingerprintAuthenticationDialogFragment fragment
-                        = new FingerprintAuthenticationDialogFragment();
-                fragment.setCryptoObject(new FingerprintManager.CryptoObject(mCipher));
-                fragment.setStage(FingerprintAuthenticationDialogFragment.Stage.FINGERPRINT);
-                fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
-            } else {
-                Log.e("TAG","Cipher init failed!");
-            }
+        if (mCipher != null) {
+
+            // Show the fingerprint dialog. The user has the option to use the fingerprint with
+            // crypto, or you can fall back to using a server-side verified password.
+            FingerprintAuthenticationDialogFragment fragment
+                    = new FingerprintAuthenticationDialogFragment();
+            Bundle bundle =new Bundle();
+            bundle.putString("SERVICE_NAME",serviceName);
+            fragment.setArguments(bundle);
+            fragment.setCryptoObject(new FingerprintManager.CryptoObject(mCipher));
+            fragment.setStage(FingerprintAuthenticationDialogFragment.Stage.FINGERPRINT);
+            fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
+        } else {
+            Log.e("TAG","Cipher init failed!");
         }
     }
 }
