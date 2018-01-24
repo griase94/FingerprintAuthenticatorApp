@@ -206,7 +206,7 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
 
         Map<String,Object> userUpdateMap = new HashMap<>();
         userUpdateMap.put("status",ServiceStatus.APPROVED);
-        devicesRef.child(android_id).child(serviceName).updateChildren(userUpdateMap);
+        devicesRef.child(android_id).child("services").child(serviceName).updateChildren(userUpdateMap);
     }
 
     protected void showFingerprintDialog(String serviceName){
