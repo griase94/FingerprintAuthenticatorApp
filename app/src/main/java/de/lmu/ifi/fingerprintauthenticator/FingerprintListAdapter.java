@@ -46,9 +46,9 @@ public class FingerprintListAdapter extends ArrayAdapter<Service> {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Service service = dataSnapshot.getValue(Service.class);
                 boolean changed = false;
-                Log.i("LIST ADAPTER", "child changed!!!");
                 for(Service ser:values){
-                    if (ser.getName() == service.name){
+                    if (ser.getName().equals(service.name)){
+                        Log.i("LIST ADAPTER", "status: "+service.getStatus());
                         ser.setStatus(service.getStatus());
                         changed = true;
                     }
@@ -62,7 +62,7 @@ public class FingerprintListAdapter extends ArrayAdapter<Service> {
                 Service service = dataSnapshot.getValue(Service.class);
                 boolean changed = false;
                 for(Service ser:values){
-                    if (ser.getName() == service.name){
+                    if (ser.getName().equals(service.name)){
                         values.remove(ser);
                         changed = true;
                     }
@@ -98,6 +98,9 @@ public class FingerprintListAdapter extends ArrayAdapter<Service> {
 
         final String text = values.get(position).name;
         boolean actionNeeded;
+
+        Log.i("LIST ADAPTER", "get view status: "+values.get(position).status);
+
         switch(values.get(position).status){
             case APPROVED:
                 actionNeeded = false;

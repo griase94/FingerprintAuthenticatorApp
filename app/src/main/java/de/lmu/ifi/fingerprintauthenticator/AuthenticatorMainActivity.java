@@ -90,7 +90,7 @@ public class AuthenticatorMainActivity extends AppCompatActivity {
         final DatabaseReference deviceRegistrationRef = database.getReference("device_registration");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Title");
+        builder.setTitle("Device Registration");
 
         // Set up the input
         final EditText input = new EditText(this);
